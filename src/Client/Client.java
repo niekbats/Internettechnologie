@@ -16,10 +16,17 @@ public class Client {
 	final static String SERVER_ADDRESS = "localhost";
 	private InputStream inputStream;
 	private OutputStream outputStream;
-	
+	private String clientID = "test";
+
 	Client() {
 		// Maak een socket voor de verbinding met de server
 		Socket socket = null;
+
+		Scanner invoer = new Scanner(System.in);
+		System.out.println("Naam van de client ?");
+		clientID = invoer.nextLine();
+//		invoer.close();
+
 		try {
 			socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
 			System.out.println("Verbonden!");
@@ -31,15 +38,13 @@ public class Client {
 		try {
 			inputStream = socket.getInputStream();
 			outputStream = socket.getOutputStream();
-			
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			OutputStream outputStream = new BufferedOutputStream(
-					socket.getOutputStream());
+			OutputStream outputStream = new BufferedOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,26 +59,28 @@ public class Client {
 
 		public void run() {
 			while (true) {
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
+
+
+				PrintWriter writer = new PrintWriter(outputStream);
+				System.out.println("Voer een bericht in");
+				Scanner in = new Scanner(System.in);
+				String tekst = in.nextLine();
+				writer.println("[" + clientID + "] " + tekst);
+				writer.flush();// vetelt het systeem om alle uistaande data te
+								// versturen
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				try {
-					String data = reader.readLine();
+					String line = reader.readLine();
+					System.out.println(line);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// Doe iets met de ingelezen data.
-				System.out.println(inputStream.toString());
-				
-				PrintWriter writer = new PrintWriter(outputStream);
-				Scanner in = new Scanner(System.in);
-				String tekst = in.nextLine();
-				writer.println(tekst);
-				System.out.println(tekst +" ingevoerd"); 
-				writer.flush();// vetelt het systeem om alle uistaande data te versturen
-				
+				//System.out.println(line);
 				
 			}
+
 		}
 	}
 
