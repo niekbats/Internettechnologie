@@ -17,15 +17,14 @@ public class Client {
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private String clientID = "test";
+	private Socket socket = null;
 
 	Client() {
 		// Maak een socket voor de verbinding met de server
-		Socket socket = null;
-
 		Scanner invoer = new Scanner(System.in);
 		System.out.println("Naam van de client ?");
 		clientID = invoer.nextLine();
-//		invoer.close();
+		// invoer.close();
 
 		try {
 			socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -43,12 +42,13 @@ public class Client {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			OutputStream outputStream = new BufferedOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// OutputStream outputStream = new
+		// BufferedOutputStream(socket.getOutputStream());
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		// Creëer een thread om berichten van de server te ontvangen
 		ServerListener serverListener = new ServerListener();
 		serverListener.run();
@@ -59,26 +59,41 @@ public class Client {
 
 		public void run() {
 			while (true) {
-
-
-				PrintWriter writer = new PrintWriter(outputStream);
-				System.out.println("Voer een bericht in");
 				Scanner in = new Scanner(System.in);
-				String tekst = in.nextLine();
-				writer.println("[" + clientID + "] " + tekst);
-				writer.flush();// vetelt het systeem om alle uistaande data te
-								// versturen
+				System.out.println("Kies verzenden of ontvangen als optie");
+				String invoer = in.nextLine();
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-				try {
-					String line = reader.readLine();
-					System.out.println(line);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (invoer.equals("verzenden")) {
+					PrintWriter writer = new PrintWriter(outputStream);
+					System.out.println("Voer een bericht in");
+					String tekst = in.nextLine();
+					writer.println("[" + clientID + "] " + tekst);
+					writer.flush();// vetelt het systeem om alle uistaande data
+									// te
+									// versturen
+				} else if (invoer.equals("ontvangen")) {
+
+					try {
+						System.out.println("De inputstream wordt opgehaald");
+						inputStream = socket.getInputStream();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+					System.out.println("BufferdReader wordt gelezen");
+					try {
+							String line = reader.readLine();
+							System.out.println(line);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					System.out.println("Geef geldige optie: verzenden of ontvangen!");
 				}
-				//System.out.println(line);
-				
+				// System.out.println(line);
+
 			}
 
 		}
