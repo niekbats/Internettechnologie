@@ -30,10 +30,11 @@ public class Server {
 		}
 
 		// Wacht op binnenkomende client connectie requests.
-
+while(true){
 		try {
 			Socket socket = serverSocket.accept();
 			verbonden.add(socket);
+			System.out.println(verbonden.size());
 			// Als er een verbinding tot stand is gebracht, start een nieuwe
 			// thread.
 			ClientThread ct = new ClientThread(socket);
@@ -46,7 +47,7 @@ public class Server {
 
 		// start de thread en roept run() aan. Gebruik hier niet
 		// run(): dan wordt de code in de huidige thread gedraaid.
-	}
+	}}
 
 	public class ClientThread extends Thread {
 		private Socket socket;
@@ -56,8 +57,13 @@ public class Server {
 		}
 
 		public void run() {
+		
+			
+			
 			while (true) {
+				
 				try {
+					
 					
 					for(int i = 0; i<verbonden.size() ;i++){
 						inputStream = socket.getInputStream();
@@ -87,7 +93,7 @@ public class Server {
 				// 1. Wacht op berichten van de client.
 				// 2. Stuur berichten van de clients door naar de andere
 				// clients. (Broadcast)
-			}
+							}
 		}
 	}
 }

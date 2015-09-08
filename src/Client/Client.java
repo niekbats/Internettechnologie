@@ -74,14 +74,12 @@ public class Client {
 				} else if (invoer.equals("ontvangen")) {
 
 					try {
-						System.out.println("De inputstream wordt opgehaald");
 						inputStream = socket.getInputStream();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-					System.out.println("BufferdReader wordt gelezen");
 					try {
 							String line = reader.readLine();
 							System.out.println(line);
