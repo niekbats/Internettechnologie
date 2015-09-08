@@ -33,7 +33,7 @@ public class Client {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		// Creëer een input en output stream
+		// CreÃ«er een input en output stream
 		try {
 			inputStream = socket.getInputStream();
 			outputStream = socket.getOutputStream();
@@ -49,13 +49,13 @@ public class Client {
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
-		// Creëer een thread om berichten van de server te ontvangen
-		ServerListener serverListener = new ServerListener();
+		// CreÃ«er een thread om berichten van de server te ontvangen
+		ServerSender serverListener = new ServerSender();
 		serverListener.run();
 
 	}
 
-	public class ServerListener extends Thread {
+	public class ServerSender extends Thread {
 
 		public void run() {
 			while (true) {
@@ -94,6 +94,30 @@ public class Client {
 
 			}
 
+		}
+	}
+	
+	public class ServerListener extends Thread {
+		
+		public void run() {
+			while(true) {
+				try {
+					System.out.println("De inputstream wordt opgehaald");
+					inputStream = socket.getInputStream();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+				System.out.println("BufferdReader wordt gelezen");
+				try {
+						String line = reader.readLine();
+						System.out.println(line);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
